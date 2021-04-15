@@ -1,0 +1,137 @@
+#lunbotu{
+    background-image: url(/img/bg.jpg);
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -ms-background-size: cover;
+
+}
+#carousel-example-generic {
+    width: 1200px;
+    height: 600px;
+    margin: 0 auto;
+}
+#carousel-example-generic .carousel-inner>.item img {
+    display: block;
+    width: 100%;
+    height: 600px;
+}
+.news-list{
+    background-color: white;
+    width: 1200px;
+    height: 1600px;
+    margin: 0 auto;
+
+}
+.mod{
+    border-top: #c7c7c7;
+
+}
+.title{
+    color: #2f63ba;
+    font-size: 20px;
+    margin-top: 10px;
+}
+.hd{
+    border-top: 2px solid #c7c7c7;
+    border-bottom: 1px solid #ececec;
+}
+.hb{
+    margin-top: 8px;
+}
+.jiShiList{
+    border-bottom: 1px dotted #ececec;
+    color: black;font-size: 15px;line-height: 32px;
+}
+.ullist{
+    font-size: 14px;
+    color: black;
+    line-height: 28px;
+}
+
+.larger{
+    font-size: large;
+    font-weight: bold;
+}
+.picture a  img{
+    width: 114px;
+    height: 76px;
+}
+ul{
+    padding-left: 20px;
+}
+.newsWithImgtitle{
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    color: black;
+    font-size: 10px;
+}
+.dec{
+    display: block;
+}
+.textOneLine{
+    display: inline-block;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow:ellipsis;
+}
+/**/
+.smallLunbotu{
+    width: 750px;
+    height: 340px;
+    float: left;
+}
+.bodyLeft{
+    float: left;width: 750px;
+}
+.bodyRight{
+    width: 400px;
+    float: left;
+    margin-left: 30px;
+}
+#shiPingNews{
+    border-bottom:1px solid #ececec;
+    margin-top: 10px;
+    height:  76px
+}
+#shiPingNewsTitle{
+    display: inline;
+    float:left;
+    width: 250px;
+    margin-left: 20px;
+}
+.newsWithImg{
+    float: right;
+    width: 240px;
+    height: 160px;
+    padding-top: 25px;
+}
+.bigimg{
+    width: 240px;
+    height: 160px;
+}
+.pictureimg{
+    width: 136px;
+    height: 90px;
+}
+.remove{
+    list-style:"";
+    width: 136px;
+    height: 120px;
+    overflow: hidden;
+    display: inline-block;
+    margin-left: 20px;
+}
+#onePictureWithTitle{
+    width: 270px;
+    height: 76px;
+    display: inline;
+    float: left;background-color: #f5f5f5
+}

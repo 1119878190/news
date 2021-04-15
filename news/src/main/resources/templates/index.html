@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" >
+    <meta name="referrer" content="no-referrer"/>
+    <title>新闻网</title>
+    <!-- 引入bootstrap -->
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+
+</head>
+
+<body id="body">
+    <!--    导航条-->
+    <div th:fragment="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="margin-left: 320px">
+                    <ul class="nav navbar-nav">
+                        <li th:class="${activeUri=='index'?'active':''}"><a th:href="@{/}">首页 </a></li>
+                        <li th:class="${activeUri=='guoNei'?'active':''}"><a th:href="@{/guoNei}">国内</a></li>
+                        <li th:class="${activeUri=='guoJi'?'active':''}"><a th:href="@{/guoJi}">国际</a></li>
+                        <li th:class="${activeUri=='junShi'?'active':''}"><a th:href="@{/junShi}">军事</a></li>
+                        <li th:class="${activeUri=='yuLe'?'active':''}"><a th:href="@{/yuLe}">娱乐</a></li>
+<!--                        <li><a th:href="@{/druid}" target="_blank">druid监控</a></li>-->
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right" style="margin-right: 300px">
+                        <form class="navbar-form navbar-left" method="get" th:action="@{/search}">
+                            <div class="form-group">
+                                <input type="text" name="keyword" class="form-control" placeholder="请输入关键词" th:value="${keyword}">
+                            </div>
+                            <button type="submit" class="btn btn-default">搜索</button>
+                        </form>
+
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+
+
+    <!--轮播图-->
+    <div id="lunbotu" th:fragment="lunbotu">
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active" ></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="6"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="7"></li>
+
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox" >
+
+                <div th:class="|item ${status.index==0?'active':''}|" th:each="rotationImg,status:${homepageRotationImg}">
+                    <a th:href="${rotationImg.href}">
+                        <img th:src="${rotationImg.src}" alt="..." >
+                        <div class="carousel-caption">
+                            <h3 th:text="${rotationImg.showInfo}">这是第一章图片</h3>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+    <!--  新闻列表  -->
+    <div class="news-list" >
+        <!--  热点新闻      -->
+        <div id="hot-head">
+            <div class="classificationTitle">
+                <h3>热点新闻</h3>
+            </div>
+            <div id="hot-news-contain" style="width: 1000px">
+                <div id="hot-news" style="width: 470px">
+                    <ul th:each="news,status:${newsList}">
+                        <a th:href="${news.href}">
+                            <li th:class="${status.count % 6 == 1 ?'ul-li':''}">
+                                <span th:class="${status.count % 6 == 1 ?'font-b ul-li':''}" th:text="${news.title}"></span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+                <div id="hot-news-right">
+                    <div id="weibo">
+                        <div id="weiboHead">
+                            <img th:src="@{/img/weibo.jpg}">
+                            <span style="font-size: 30px">微博要问榜</span>
+                        </div>
+                        <div class="panel-body" style="height: 300px; overflow-y:scroll">
+                            <div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
+                                <ol>
+                                    <a th:href="${weiBoHotWord.href}" th:each="weiBoHotWord:${weiBoHotWords}">
+                                        <li th:text="${weiBoHotWord.title}" style="font-size: 18px;color: black;border-bottom: #999999 dotted 1px " ></li>
+                                    </a>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="zhihu">
+                        <div id="zhihuHead">
+                            <img th:src="@{/img/zhiHu.jpg}">
+                            <span style="font-size: 30px">知乎热搜榜</span>
+                        </div>
+                        <div class="panel-body" style="height: 330px; overflow-y:scroll">
+                            <div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
+                                <ol>
+                                    <a th:href="${zhiHuHotWord.href}" th:each="zhiHuHotWord:${zhiHuHotWords}">
+                                        <li th:text="${zhiHuHotWord.title}" style="font-size: 18px;color: black;border-bottom: #999999 dotted 1px " ></li>
+                                    </a>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="baidu">
+                        <div id="baiduHead">
+                            <img th:src="@{/img/baiDu.jpg}">
+                            <span style="font-size: 30px">百度热搜榜</span>
+                        </div>
+                        <div class="panel-body" style="height: 300px; overflow-y:scroll">
+                            <div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
+                                <ol>
+                                    <a th:href="${baiDuHotWord.href}" th:each="baiDuHotWord:${baiDuHotWords}">
+                                        <li th:text="${baiDuHotWord.title}" style="font-size: 18px;color: black;border-bottom: #999999 dotted 1px " ></li>
+                                    </a>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  国内新闻  -->
+        <div id="guoNeiNews" class="others">
+            <div class="classificationTitle">
+                <h3>国内新闻</h3>
+            </div>
+            <div id="guoNei">
+                <div id="guoNeiLeft" class="otherNewsLeft">
+                    <ul th:each="news,status:${homePageGuoNei}">
+                        <a th:href="${news.href}">
+                            <li th:class="${status.count % 6 == 1 ?'ul-li':''}">
+                                <span th:class="${status.count % 6 == 1 ?'font-b ul-li':''}" th:text="${news.title}"></span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+                <div id="guoNeiCenter" class="otherNewsCenter">
+                    <h4>国内图片</h4>
+                    <div class="newsWithImgTop">
+                        <a th:href="${homeGuoNeiImgTop.href}">
+                            <img th:src="${homeGuoNeiImgTop.src}" class="newsWithImgTop" style="height: 170px">
+                        </a>
+                        <p></p>
+                        <a th:href="${homeGuoNeiImgTop.href}" th:text="${homeGuoNeiImgTop.title}"  class="newsWithImgtitle"></a>
+                    </div>
+                    <div class="newsWithImgBottom">
+                        <div class="newsWithImgBottomLeft">
+                            <a th:href="${homeGuoNeiImgBottomLeft.href}">
+                                <img th:src="${homeGuoNeiImgBottomLeft.src}" class="newsWithImgBottomImgSize" style=" height: 84px;">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoNeiImgBottomLeft.href}" th:text="${homeGuoNeiImgBottomLeft.title}" class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgBottomRight">
+                            <a th:href="${homeGuoNeiImgBottomRight.href}">
+                                <img th:src="${homeGuoNeiImgBottomRight.src}" class="newsWithImgBottomImgSize" style="height: 84px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoNeiImgBottomRight.href}" th:text="${homeGuoNeiImgBottomRight.title}" class="newsWithImgtitle"></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="guoNeiRight" class="otherNewsRight">
+                    <h4>图文资讯</h4>
+                    <div class="newsWithImgRight" >
+                        <div class="newsWithImgListLeft">
+                            <a th:href="${homeGuoNeiImgListLeft.href}">
+                                <img th:src="${homeGuoNeiImgListLeft.src}" class="newsWithImgListImgSize" style="height: 90px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoNeiImgListLeft.href}" th:text="${homeGuoNeiImgListLeft.title}" class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgListRight">
+                            <a th:href="${homeGuoNeiIMgListRight.href}">
+                                <img th:src="${homeGuoNeiIMgListRight.src}" class="newsWithImgListImgSize" style="height: 90px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoNeiIMgListRight.href}" th:text="${homeGuoNeiIMgListRight.title}" class="newsWithImgtitle"></a>
+                        </div>
+                    </div>
+                    <h4>热门点击</h4>
+                    <div id="hotcheck"  class="hotcheckorwords hotcheck">
+                        <ol th:each="news,status:${homeGuoNeiHotCheck}">
+                            <a th:href="${news.href}">
+                                <li style="list-style: none">
+<!--                                    <span th:text="${status.count}"></span>-->
+                                    <span th:text="${status.count+'.'+news.title}"  class="hotcheckorwordstitle"></span>
+                                </li>
+                            </a>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  国际新闻  -->
+        <div id="guoJiNews" class="others" >
+            <div class="classificationTitle">
+                <h3>国际新闻</h3>
+            </div>
+            <div id="guoJi">
+                <div id="guoJiLeft" class="otherNewsLeft">
+                    <ul th:each="news,status:${homePageGuoJi}">
+                        <a th:href="${news.href}">
+                            <li th:class="${status.count % 6 == 1 ?'ul-li':''}">
+                                <span th:class="${status.count % 6 == 1 ?'font-b ul-li':''}" th:text="${news.title}"></span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+                <div id="guoJiCenter" class="otherNewsCenter">
+                    <h4>国际图片</h4>
+                    <div class="newsWithImgTop">
+                        <a th:href="${homeGuoJiImgTop.href}">
+                            <img th:src="${homeGuoJiImgTop.src}" class="otherWithImgTop" >
+                        </a>
+                        <p></p>
+                        <a th:href="${homeGuoJiImgTop.href}" th:text="${homeGuoJiImgTop.title}"  class="newsWithImgtitle"></a>
+                    </div>
+                    <div class="newsWithImgBottom">
+                        <div class="newsWithImgBottomLeft">
+                            <a th:href="${homeGuoJiImgBottomLeft.href}">
+                                <img th:src="${homeGuoJiImgBottomLeft.src}" class="newsWithImgBottomImgSize" style="height: 84px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoJiImgBottomLeft.href}" th:text="${homeGuoJiImgBottomLeft.title}" class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgBottomRight">
+                            <a th:href="${homeGuoJiImgBottomRight.href}">
+                                <img th:src="${homeGuoJiImgBottomRight.src}" class="newsWithImgBottomImgSize" style="height: 84px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoJiImgBottomRight.href}" th:text="${homeGuoJiImgBottomRight.title}" class="newsWithImgtitle"></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="guoJiRight" class="otherNewsRight">
+                    <h4>环球视野</h4>
+                    <div class="newsWithImgRight" >
+                        <div class="newsWithImgListLeft">
+                            <a th:href="${homeGuoJiImgListLeft.href}">
+                                <img th:src="${homeGuoJiImgListLeft.src}" class="newsWithImgListImgSize" style="height: 90px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoJiImgListLeft.href}" th:text="${homeGuoJiImgListLeft.title}" class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgListRight">
+                            <a th:href="${homeGuoJiIMgListRight.href}">
+                                <img th:src="${homeGuoJiIMgListRight.src}" class="newsWithImgListImgSize" style="height: 90px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeGuoJiIMgListRight.href}" th:text="${homeGuoJiIMgListRight.title}" class="newsWithImgtitle"></a>
+                        </div>
+                    </div>
+                    <h4>国际热搜词</h4>
+                    <div id="hotwords" style=" margin-top: 20px" >
+                        <div id="hotwordsLeft">
+                            <ol style="padding-left: 2px;line-height: 30px">
+                                    <li style="list-style: none" th:each="news,status:${homeGuoJiHotCheck}" th:if="${status.count<6}">
+                                        <a th:href="${news.href}" th:text="${status.count+'.'+news.title}"></a>
+                                    </li>
+                            </ol>
+                        </div>
+                        <div id="hotwordsRight">
+                            <ol style="padding-left: 2px;line-height: 30px">
+                                <li style="list-style: none" th:each="news,status:${homeGuoJiHotCheck}" th:if="${status.count>5}">
+                                    <a th:href="${news.href}" th:text="${status.count+'.'+news.title}"></a>
+                                </li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  军事新闻      -->
+        <div id="junShiNews" class="others">
+            <div class="classificationTitle">
+                <h3>军事新闻</h3>
+            </div>
+            <div id="junShiNei">
+                <div id="junShiLeft" class="otherNewsLeft">
+                    <ul th:each="news,status:${homePageJunShi}">
+                        <a th:href="${news.href}">
+                            <li th:class="${status.count % 6 == 1 ?'ul-li':''}">
+                                <span th:class="${status.count % 6 == 1 ?'font-b ul-li':''}" th:text="${news.title}"></span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+                <div id="junShiCenter" class="otherNewsCenter">
+                    <h4>军事图片</h4>
+                    <div class="newsWithImgTop">
+                        <a th:href="${homeJunShiImgTop.href}">
+                            <img th:src="${homeJunShiImgTop.src}" class="otherWithImgTop">
+                        </a>
+                        <p></p>
+                        <a th:href="${homeJunShiImgTop.href}" th:text="${homeJunShiImgTop.title}"  class="newsWithImgtitle"></a>
+                    </div>
+                    <div class="newsWithImgBottom">
+                        <div class="newsWithImgBottomLeft">
+                            <a th:href="${homeJunShiImgBottomLeft.href}">
+                                <img th:src="${homeJunShiImgBottomLeft.src}" class="newsWithImgBottomImgSize" style="height: 84px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeJunShiImgBottomLeft.href}" th:text="${homeJunShiImgBottomLeft.title}" class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgBottomRight">
+                            <a th:href="${homeJunShiImgBottomRight.href}">
+                                <img th:src="${homeJunShiImgBottomRight.src}" class="newsWithImgBottomImgSize" style="height:84px">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeJunShiImgBottomRight.href}" th:text="${homeJunShiImgBottomRight.title}" class="newsWithImgtitle"></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="junShiRight" class="otherNewsRight" >
+                    <h4>热门点击</h4>
+                    <div class="newsWithImgRight hotcheck" style="line-height: 15px">
+                        <ol th:each="news,status:${homeJunShiHotCheck}">
+                            <a th:href="${news.href}">
+                                <li style="list-style: none">
+                                    <span th:text="${status.count+'.'+news.title}"  class="hotcheckorwordstitle"></span>
+                                </li>
+                            </a>
+                        </ol>
+                    </div>
+                    <h4>中国军情</h4>
+                    <div id="ChinaWar"  class="hotcheckorwords hotcheck" >
+                        <ol th:each="news,status:${homeJunShiChinaWar}">
+                            <a th:href="${news.href}">
+                                <li style="list-style: none">
+                                    <span th:text="${status.count+'.'+news.title}"  class="hotcheckorwordstitle"></span>
+                                </li>
+                            </a>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 娱乐   -->
+        <div id="yuLeNews" class="others">
+
+            <div class="classificationTitle">
+                <h3>娱乐新闻</h3>
+            </div>
+            <div id="yuLe" style="border: white solid 1px;height: 400px">
+                <div>
+                    <div id="yuLeLeft" class="otherNewsLeft">
+                        <ul th:each="news,status:${homePageYuLe}">
+                            <a th:href="${news.href}">
+                                <li th:class="${status.count % 6 == 1 ?'ul-li':''}">
+                                    <span th:class="${status.count % 6 == 1 ?'font-b ul-li':''}" th:text="${news.title}"></span>
+                                </li>
+                            </a>
+                        </ul>
+                    </div>
+                    <div id="yuLeCenter" class="otherNewsCenter">
+                        <h4>娱乐图片</h4>
+                        <div class="newsWithImgTop">
+                            <a th:href="${homeYuLeImgTop.href}">
+                                <img th:src="${homeYuLeImgTop.src}" class="otherWithImgTop">
+                            </a>
+                            <p></p>
+                            <a th:href="${homeYuLeImgTop.href}" th:text="${homeYuLeImgTop.title}"  class="newsWithImgtitle"></a>
+                        </div>
+                        <div class="newsWithImgBottom">
+                            <div class="newsWithImgBottomLeft">
+                                <a th:href="${homeYuLeImgBottomLeft.href}">
+                                    <img th:src="${homeYuLeImgBottomLeft.src}" class="newsWithImgBottomImgSize"  style="height: 84px">
+                                </a>
+                                <p></p>
+                                <a th:href="${homeYuLeImgBottomLeft.href}" th:text="${homeYuLeImgBottomLeft.title}" class="newsWithImgtitle"></a>
+                            </div>
+                            <div class="newsWithImgBottomRight">
+                                <a th:href="${homeYuLeImgBottomRight.href}">
+                                    <img th:src="${homeYuLeImgBottomRight.src}" class="newsWithImgBottomImgSize" style="height: 84px">
+                                </a>
+                                <p></p>
+                                <a th:href="${homeYuLeImgBottomRight.href}" th:text="${homeYuLeImgBottomRight.title}" class="newsWithImgtitle"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="yuLeRight" class="otherNewsRight">
+                        <h4>明星</h4>
+                        <div class="newsWithImgRight" >
+                            <div class="newsWithImgListLeft">
+                                <a th:href="${homeYuLeImgListLeft.href}">
+                                    <img th:src="${homeYuLeImgListLeft.src}" class="newsWithImgListImgSize" style="height: 90px">
+                                </a>
+                                <p></p>
+                                <a th:href="${homeYuLeImgListLeft.href}" th:text="${homeYuLeImgListLeft.title}" class="newsWithImgtitle"></a>
+                            </div>
+                            <div class="newsWithImgListRight">
+                                <a th:href="${homeYuLeIMgListRight.href}">
+                                    <img th:src="${homeYuLeIMgListRight.src}" class="newsWithImgListImgSize" style="height: 90px">
+                                </a>
+                                <p></p>
+                                <a th:href="${homeYuLeIMgListRight.href}" th:text="${homeYuLeIMgListRight.title}" class="newsWithImgtitle"></a>
+                            </div>
+                        </div>
+                        <div id="yulehotcheck"  class="hotcheck">
+                            <ol th:each="news,status:${homeYuLeHotWords}">
+                                <a th:href="${news.href}">
+                                    <li style="list-style: none">
+                                        <span th:text="${status.count+'.'+news.title}"  class="hotcheckorwordstitle"></span>
+                                    </li>
+                                </a>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 400px" id="homeYuLeBottom">
+                    <div th:each="homeYuLeBottomImg:${homeYuLeBottomImgs}" style="margin-right: 25px;margin-left: 20px">
+                        <a th:href="${homeYuLeBottomImg.href}">
+                            <img th:src="${homeYuLeBottomImg.src}" class="otherWithImgTop" style="width: 187px;height: 125px ">
+                        </a>
+                        <p></p>
+                        <a th:href="${homeYuLeBottomImg.href}" th:text="${homeYuLeBottomImg.title}"  class="newsWithImgtitle"></a>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div id="footer" style="background-color: #001e50;height: 400px" th:fragment="footer">
+        <h3 style="color: white;text-align: center;padding-top: 150px">
+            基于数据采集的热点新闻网
+            <span>
+                江苏师范大学科文学院
+            </span>
+        </h3>
+    </div>
+
+
+
+</body>
+</html>

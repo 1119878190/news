@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta th:name="referrer" th:content="no-referrer" />
+    <title>娱乐新闻</title>
+    <!-- 引入bootstrap -->
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="/webjars/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/yuLe.css}">
+</head>
+<body>
+<!--导航条-->
+<div th:replace="index :: navbar"></div>
+
+<!-- 轮播图   -->
+<div th:replace="index :: lunbotu"></div>
+
+<!-- 新闻列表 -->
+<div class="news-list" style="margin-top: 10px">
+    <!--  即时新闻      -->
+    <div class="jishiNews allinline" style="height: 340px">
+        <!-- 轮播图 -->
+        <div class="smallLunbotu">
+            <div id="yuLe-carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active" ></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                </ol>
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox" >
+
+                    <div th:class="|item ${status.index==0?'active':''}|" th:each="rotationImg,status:${yuLeRotationImg}">
+                        <a th:href="${rotationImg.href}">
+                            <img th:src="${rotationImg.src}" alt="..." style="width: 750px;height: 340px">
+                            <div class="carousel-caption">
+                                <h3 th:text="${rotationImg.showInfo}">这是第一章图片</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Controls -->
+                <a class="left carousel-control" href="#yuLe-carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#yuLe-carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <!--新闻列表 -->
+        <div  class="mod" style="float: left;margin-left: 30px">
+            <div class="hd">
+                <h4 class="title" >即时新闻</h4>
+                <span class="dec">INSTANT NEWS</span>
+            </div>
+            <div  class="hb">
+                <ul>
+                    <li class="jiShiList" th:each="jiShiNew:${jiSHiNews}" >
+                        <a th:href="${jiShiNew.href}" th:text="${jiShiNew.title}" style="color: black" target="_blank"> </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--   焦点新闻     -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--要闻列表 -->
+            <div class="hd">
+                <span class="title" >焦点新闻</span>
+                <span class="dec">FOCAL NEWS</span>
+            </div>
+            <div class="hb">
+                <!--  上   -->
+                <div style="float:left;height: 210px;">
+                    <div style="float: left;width: 500px;border-bottom: #ccc dotted 1px">
+                        <ul>
+                            <li th:each="jiaoDianNew,status:${jiaoDianNews}" th:if="${status.count<7}">
+                                <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${jiaoDianNew.href}" th:text="${jiaoDianNew.title}" style="line-height: 32px" ></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--  下   -->
+                <div style="float:left;height: 210px;">
+                    <div style="float: left;width: 500px">
+                        <ul>
+                            <li th:each="jiaoDianNew,status:${jiaoDianNews}" th:if="${status.count>6}">
+                                <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${jiaoDianNew.href}" th:text="${jiaoDianNew.title}" style="line-height: 32px"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 右    军事视频  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >百家专栏</span>
+                <span class="dec">BAIJIA</span>
+            </div>
+            <div class="hb" style="margin-top: 20px;height: 420px;width: 240px;margin: auto">
+                <div style="width: 240px;">
+                   <ul>
+                       <li th:each="baijia:${baiJiaNews}" style="list-style: '';line-height: 40px">
+                           <a th:href="${baijia.href}" target="_blank">
+                               <img th:src="${baijia.src}" class="bigimg">
+                           </a>
+                           <a th:text="${baijia.title}" th:href="${baijia.href}" target="_blank" class="textOneLine" style="color: black" ></a>
+                       </li>
+                   </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  明星    -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--列表 -->
+            <div class="hd">
+                <span class="title" >明星</span>
+                <span class="dec">STARTS</span>
+            </div>
+            <div class="hb">
+                <!--  左侧新闻-->
+                <div style="float:left;width: 450px;">
+                    <!--  上   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="startNew,status:${startsNews}" th:if="${status.count<7}">
+                                    <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${startNew.href}" th:text="${startNew.title}" style="line-height: 32px" ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--  中   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="startsNew,status:${startsNews}" th:if="${status.count>6 && status.count<13}">
+                                    <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${startsNew.href}" th:text="${startsNew.title}" style="line-height: 32px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 下-->
+                    <div style="height: 210px;">
+                        <div style="float: left;">
+                            <ul>
+                                <li th:each="startsNew,status:${startsNews}" th:if="${status.count>12}">
+                                    <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${startsNew.href}" th:text="${startsNew.title}" style="line-height: 32px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧图片  -->
+                <div style="width: 240px;float: right">
+                    <ul>
+                        <li th:each="startsImg:${startsNewsImg}" style="list-style: '';line-height: 40px">
+                            <a th:href="${startsImg.href}" target="_blank">
+                                <img th:src="${startsImg.src}" class="bigimg">
+                            </a>
+                            <a th:text="${startsImg.title}" th:href="${startsImg.href}" target="_blank" class="textOneLine" style="color: black"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 右   上  传文爆料  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >传文爆料</span>
+                <span class="dec">RUMOURS</span>
+            </div>
+            <div class="hb" style="margin-top: 20px;height: 360px;">
+                <div style="height: 360px;">
+                    <ul>
+                        <li th:each="rumoursNew,status:${rumoursNews}" style="border-bottom: #999999 dotted 1px">
+                            <a  th:class="ullist" th:href="${rumoursNew.href}" th:text="${rumoursNew.title}" style="line-height: 35px" target="_blank"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 右 下 综艺视频-->
+        <div class="bodyRight" style="margin-top: 60px">
+            <div class="hd">
+                <span class="title" >综艺视频</span>
+                <span class="dec">VARIETY VIDEO</span>
+            </div>
+            <div class="hb" style="margin-top: 20px;height: 120px">
+                <div>
+                    <ul>
+                        <li th:each="varietyVideo,status:${varietyVideos}" style="display: inline-block;padding-left: 25px">
+                            <a   th:href="${varietyVideo.href}" target="_blank">
+                                <img th:src="${varietyVideo.src}" alt="" class="pictureimg">
+                            </a>
+                            <br>
+                            <a th:href="${varietyVideo.href}" th:text="${varietyVideo.title}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 电影   -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--列表 -->
+            <div class="hd">
+                <span class="title" >电影</span>
+                <span class="dec">MOVIES</span>
+            </div>
+            <div class="hb">
+                <!--  左侧新闻-->
+                <div style="float:left;width: 450px;">
+                    <!--  上   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="movieNew,status:${moviesNews}" th:if="${status.count<7}">
+                                    <a  th:class="|ullist  textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${movieNew.href}" th:text="${movieNew.title}" style="line-height: 32px" ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 下-->
+                    <div style="height: 210px;">
+                        <div style="float: left;">
+                            <ul>
+                                <li th:each="movieNew,status:${moviesNews}" th:if="${status.count>6}">
+                                    <a  th:class="|ullist textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${movieNew.href}" th:text="${movieNew.title}" style="line-height: 32px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧图片  -->
+                <div style="width: 240px;float: right">
+                    <ul>
+                        <li th:each="moviesImg:${moviesImgs}" style="list-style: '';line-height: 40px">
+                            <a th:href="${moviesImg.href}" target="_blank">
+                                <img th:src="${moviesImg.src}" class="bigimg">
+                            </a>
+                            <a th:text="${moviesImg.title}" th:href="${moviesImg.href}" target="_blank" class="textOneLine" style="color: black"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 右  电影花絮  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >电影花絮</span>
+                <span class="dec">MOVIES FEATURES</span>
+            </div>
+            <div class="hb" style="margin-top: 20px;height: 420px;">
+                <div style="height: 420px;">
+                    <ul>
+                        <li th:each="rumoursNew,status:${rumoursNews}" style="border-bottom: #999999 dotted 1px">
+                            <a  th:class="ullist" th:href="${rumoursNew.href}" th:text="${rumoursNew.title}" style="line-height: 38px" target="_blank"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  电视    -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--列表 -->
+            <div class="hd">
+                <span class="title" >电视</span>
+                <span class="dec">TVS</span>
+            </div>
+            <div class="hb">
+                <!--  左侧新闻-->
+                <div style="float:left;width: 450px;">
+                    <!--  上   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="tv,status:${tvs}" th:if="${status.count<7}">
+                                    <a  th:class="|ullist textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${tv.href}" th:text="${tv.title}" style="line-height: 35px" ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 下-->
+                    <div style="height: 210px;">
+                        <div style="float: left;">
+                            <ul>
+                                <li th:each="tv,status:${tvs}" th:if="${status.count>6}">
+                                    <a  th:class="|ullist textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${tv.href}" th:text="${tv.title}" style="line-height: 35px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧图片  -->
+                <div style="width: 240px;float: right">
+                    <ul>
+                        <li th:each="tvsImg:${tvsImgs}" style="list-style: '';line-height: 40px">
+                            <a th:href="${tvsImg.href}" target="_blank">
+                                <img th:src="${tvsImg.src}" class="bigimg">
+                            </a>
+                            <a th:text="${tvsImg.title}" th:href="${tvsImg.href}" target="_blank" class="textOneLine" style="color: black"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 右   上  热门剧集  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >热门剧集</span>
+                <span class="dec">HOT DRAMA SERIES</span>
+            </div>
+            <div class="hb" style="height: 190px">
+                <ul>
+                    <li th:each="hotDramaserie:${hotDramaseries}" >
+                        <a class="ullist" th:href="${hotDramaserie.href}" th:text="${hotDramaserie.title}" target="_blank" style="line-height: 40px"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 右 下 热门剧评-->
+        <div class="bodyRight" >
+            <div class="hd">
+                <span class="title" >热门剧评</span>
+                <span class="dec">HOT DRAMA COMMENTS</span>
+            </div>
+            <div class="hb" style="height: 180px">
+                <ul>
+                    <li th:each="hotDramaComment:${hotDramaComments}" >
+                        <a class="ullist" th:href="${hotDramaComment.href}" th:text="${hotDramaComment.title}" target="_blank" style="line-height: 40px"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--  音乐    -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--列表 -->
+            <div class="hd">
+                <span class="title" >音乐</span>
+                <span class="dec">MUSIC</span>
+            </div>
+            <div class="hb">
+                <!--  左侧新闻-->
+                <div style="float:left;width: 450px;">
+                    <!--  上   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="musicNew,status:${musicNews}" th:if="${status.count<7}">
+                                    <a  th:class="|ullist textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${musicNew.href}" th:text="${musicNew.title}" style="line-height: 35px" ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 下-->
+                    <div style="height: 210px;">
+                        <div style="float: left;">
+                            <ul>
+                                <li th:each="musicNew,status:${musicNews}" th:if="${status.count>6}">
+                                    <a  th:class="|ullist textOneLineNodisplay ${status.count%6==1?'larger':''}|" th:href="${musicNew.href}" th:text="${musicNew.title}" style="line-height: 35px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧图片  -->
+                <div style="width: 240px;float: right">
+                    <ul>
+                        <li th:each="musicImg:${musicImgs}" style="list-style: '';line-height: 40px">
+                            <a th:href="${musicImg.href}" target="_blank">
+                                <img th:src="${musicImg.src}" class="bigimg">
+                            </a>
+                            <a th:text="${musicImg.title}" th:href="${musicImg.href}" target="_blank" class="textOneLine" style="color: black"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 右   上  新歌TOP  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >新歌TOP</span>
+                <span class="dec">NEW SONGS</span>
+            </div>
+            <div class="hb" style="height: 190px">
+                <div style="height: 190px;width: 400px">
+                    <table class="table">
+                        <tr>
+                            <th>排行</th>
+                            <th>歌曲名</th>
+                            <th>歌手</th>
+                        </tr>
+                        <tr th:each="newsSong,status:${newsSongs}">
+                            <td th:text="${status.count}"></td>
+                            <td >
+                                <a th:text="${newsSong.name}" th:href="${newsSong.nameHref}" target="_blank" style="color: black"></a>
+                            </td>
+                            <td >
+                                <a th:text="${newsSong.singer}"th:href="${newsSong.singerHref}" target="_blank" style="color: black"></a>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- 右 下 中文金曲榜-->
+        <div class="bodyRight" >
+            <div class="hd">
+                <span class="title" >中文金曲榜</span>
+                <span class="dec">RANKING</span>
+            </div>
+            <div class="hb" style="height: 180px">
+                <div style="height: 190px;width: 400px">
+                    <table class="table">
+                        <tr>
+                            <th>排行</th>
+                            <th>歌曲名</th>
+                            <th>歌手</th>
+                        </tr>
+                        <tr th:each="rakingSong,status:${rakingSongs}">
+                            <td th:text="${status.count}"></td>
+                            <td >
+                                <a th:text="${rakingSong.name}" th:href="${rakingSong.nameHref}" target="_blank" style="color: black"></a>
+                            </td>
+                            <td >
+                                <a th:text="${rakingSong.singer}"th:href="${rakingSong.singerHref}" target="_blank" style="color: black"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  综艺    -->
+    <div style="height: 480px">
+        <!-- 左 -->
+        <div class="bodyLeft">
+            <!--列表 -->
+            <div class="hd">
+                <span class="title" >综艺</span>
+                <span class="dec">VARIETIES</span>
+            </div>
+            <div class="hb">
+                <!--  左侧新闻-->
+                <div style="float:left;width: 450px;">
+                    <!--  上   -->
+                    <div style="height: 210px;">
+                        <div style="float: left;border-bottom: #ccc dotted 1px">
+                            <ul>
+                                <li th:each="varietie,status:${varieties}" th:if="${status.count<7}">
+                                    <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${varietie.href}" th:text="${varietie.title}" style="line-height: 32px" ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 下-->
+                    <div style="height: 210px;">
+                        <div style="float: left;">
+                            <ul>
+                                <li th:each="varietie,status:${varieties}" th:if="${status.count>6}">
+                                    <a  th:class="|ullist  ${status.count%6==1?'larger':''}|" th:href="${varietie.href}" th:text="${varietie.title}" style="line-height: 32px"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--右侧图片  -->
+                <div style="width: 240px;float: right">
+                    <ul>
+                        <li th:each="varietiesImg:${varietiesImgs}" style="list-style: '';line-height: 40px">
+                            <a th:href="${varietiesImg.href}" target="_blank">
+                                <img th:src="${varietiesImg.src}" class="bigimg">
+                            </a>
+                            <a th:text="${varietiesImg.title}" th:href="${varietiesImg.href}" target="_blank" class="textOneLine" style="color: black"></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 右  热门点击  -->
+        <div class="bodyRight">
+            <div class="hd">
+                <span class="title" >热门点击</span>
+                <span class="dec">HOT CLICKS</span>
+            </div>
+            <div class="hb" style="margin-top: 20px;height: 420px;">
+                <div style="height: 420px;">
+                    <ul>
+                        <li th:each="rumoursNew,status:${rumoursNews}" style="border-bottom: #999999 dotted 1px">
+                            <a  th:class="ullist" th:href="${rumoursNew.href}" th:text="${rumoursNew.title}" style="line-height: 38px" target="_blank"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--图片新闻 -->
+    <div style="height: 350px;margin-top: 370px">
+        <div class="hd" >
+            <span class="title" >图片新闻</span>
+            <span class="dec">PICTURE NEWS</span>
+        </div>
+        <div class="hb" style="height: 350px;width: 1200px">
+            <ul style="">
+                <li th:each="pictureNew,status:${pictureNews}" class="jiShiList remove" style="margin-left: 60px;margin-right: 15px">
+                    <a th:href="${pictureNew.href}"  style="line-height: 40px" target="_blank">
+                        <img class="pictureimg" th:src="${pictureNew.src}" alt="">
+                        <br>
+                        <span class="textOneLine" th:text="${pictureNew.title}" style="color: black"></span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <!--最新新闻 -->
+    <div style="">
+        <div class="hd" >
+            <span class="title" >最新新闻</span>
+            <span class="dec">LATEST NEWS</span>
+        </div>
+        <div class="hb" style="height: 350px;">
+            <!-- 左  -->
+            <div style="width: 530px;height: 350px;float:left;">
+                <ul>
+                    <li th:each="latestNew,status:${latestNews}" th:if="${status.count<11}" style="line-height: 35px">
+                        <a class="ullist" th:href="${latestNew.href}" th:text="${latestNew.title}"></a>
+                        <span th:text="${latestNew.src}" style="float:right;color: #999999"></span>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右   -->
+            <div style="width: 530px;height: 350px;float:right;">
+                <ul>
+                    <li th:each="latestNew,status:${latestNews}" th:if="${status.count>10}" style="line-height: 35px" >
+                        <a class="ullist" th:href="${latestNew.href}" th:text="${latestNew.title}"></a>
+                        <span th:text="${latestNew.src}" style="float:right;color: #999999"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div th:replace="index::footer"></div>
+</body>
+</html>

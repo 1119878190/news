@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.news.mapper.NewsMapper">
+
+
+    <sql id="insertNewsSql">
+        title,href,saveTime,type
+    </sql>
+
+
+    <!--  插入新闻  -->
+    <insert id="insertNews" parameterType="com.demo.news.entity.News">
+        insert into news(<include refid="insertNewsSql"></include>)
+        values(#{title},#{href},#{saveTime},#{type})
+    </insert>
+
+
+    <!-- 插入带图片的新闻   -->
+    <insert id="insertNewsWithImg" parameterType="com.demo.news.entity.News">
+        insert into news(title,href,saveTime,type,src)
+        values(#{title},#{href},#{saveTime},#{type},#{src})
+    </insert>
+
+
+    <!--  查询热点新闻  先倒序再正序 36条数据-->
+    <select id="queryHotNews" resultType="com.demo.news.entity.News">
+        select * from news where id in(select t.id from (select * from news where type = 1 order by id desc limit 0,36)as t)
+    </select>
+
+    <!--  查询新闻数量  -->
+    <select id="queryCount" resultType="int">
+        select count(*) from news where type=#{type}
+    </select>
+
+    <!-- 删除过期数据(昨天零点之前的数据)  -->
+    <delete id="deleteNews" parameterType="date">
+        delete from news where saveTime &lt;= #{yesterday};
+    </delete>
+
+    <!--查询主页国内新闻 左    -->
+    <select id="queryIndexOtherNews" resultType="com.demo.news.entity.News" parameterType="integer">
+<!--        select * from news where type = #{homePageGuoNeiNews}-->
+         select * from news where id in(select t.id from (select * from news where type = #{type} order by id desc limit #{start},#{end})as t)
+    </select>
+
+    <!--  查询主页国内新闻,带有图片  -->
+    <select id="queryIndexOtherNewsWithImg" resultType="com.demo.news.entity.News" parameterType="integer">
+        select * from news where type = #{type} order by id desc limit 0,1
+    </select>
+
+    <!-- 通过类型删除新闻   -->
+   <!-- <delete id="deleteNewsByType">
+        delete from news where type = #{type} and saveTime &lt;= #{twoHourAgo}
+    </delete>-->
+
+    <!-- 通过类型删除新闻   -->
+    <delete id="deleteNewsByType">
+        delete from news where type > #{type} and saveTime &lt;= #{twoHourAgo}
+    </delete>
+
+    <!--  通过id删除新闻  -->
+    <delete id="deleteNewsById" parameterType="integer">
+        delete from news where id = #{id}
+    </delete>
+
+    <!--  查询所有  -->
+    <select id="queryAllNews" resultType="com.demo.news.entity.News">
+        select * from news ;
+    </select>
+
+</mapper>
+
